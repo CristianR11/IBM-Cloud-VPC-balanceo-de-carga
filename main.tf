@@ -142,6 +142,7 @@ resource "ibm_is_lb" "lb-nginx" {
   name            = "nginx-lb"
   subnets         = [ibm_is_subnet.cce-subnet-dal-1.id, ibm_is_subnet.cce-subnet-dal-2.id]
   resource_group  = data.ibm_resource_group.group.id
+  security_groups = [ibm_is_security_group.security_group.id]
 }
 
 resource "ibm_is_lb_pool" "lb-nginx-pool" {
