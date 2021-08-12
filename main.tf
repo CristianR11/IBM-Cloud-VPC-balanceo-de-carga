@@ -56,6 +56,24 @@ resource "ibm_is_subnet" "cce-subnet-dal-2" {
   resource_group  = data.ibm_resource_group.group.id
 }
 
+resource "ibm_is_security_group" "security_group" {
+  name           = "ngnx-lb-sg"
+  vpc            = ibm_is_vpc.vpc-dal.id
+  resource_group = data.ibm_resource_group.group.id
+}
+
+resource "ibm_is_security_group_rule" "security_group_rule_in" {
+  group     = ibm_is_security_group.security_group.id
+  direction = "inbound"
+  remote    = "0.0.0.0/0"
+}
+
+resource "ibm_is_security_group_rule" "security_group_rule_out" {
+  group     = ibm_is_security_group.security_group.id
+  direction = "outbound"
+  remote    = "0.0.0.0/0"
+}
+
 ##############################################################################
 # Desploy instances on DALL
 ##############################################################################
@@ -68,6 +86,7 @@ resource "ibm_is_instance" "cce-vsi-dal-1" {
 
   primary_network_interface {
     subnet = ibm_is_subnet.cce-subnet-dal-1.id
+    security_groups = [ibm_is_security_group.security_group.id]
   }
 
   vpc       = ibm_is_vpc.vpc-dal.id
@@ -85,6 +104,7 @@ resource "ibm_is_instance" "cce-vsi-dal-2" {
 
   primary_network_interface {
     subnet = ibm_is_subnet.cce-subnet-dal-2.id
+    security_groups = [ibm_is_security_group.security_group.id]
   }
 
   vpc       = ibm_is_vpc.vpc-dal.id
