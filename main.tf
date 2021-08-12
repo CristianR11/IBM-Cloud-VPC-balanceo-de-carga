@@ -72,7 +72,7 @@ resource "ibm_is_instance" "cce-vsi-dal-1" {
 
   vpc       = ibm_is_vpc.vpc-dal.id
   zone      = "us-south-1"
-  keys      = [ibm_is_ssh_key.cce-ssh-dal.id]
+  keys      = [data.ibm_is_ssh_key.sshkey.id]
   user_data = file("./script.sh")
   resource_group = data.ibm_resource_group.group.id
 }
@@ -89,14 +89,14 @@ resource "ibm_is_instance" "cce-vsi-dal-2" {
 
   vpc       = ibm_is_vpc.vpc-dal.id
   zone      = "us-south-2"
-  keys      = [ibm_is_ssh_key.cce-ssh-dal.id]
+  keys      = [data.ibm_is_ssh_key.sshkey.id]
   user_data = file("./script.sh")
   resource_group = data.ibm_resource_group.group.id
 }
 
 resource "ibm_is_lb" "lb-nginx" {
   name            = "nginx-lb"
-  subnets         = ibm_is_subnet.*.id
+  subnets         = [ibm_is_subnet.cce-subnet-dal-1.id, ibm_is_subnet.cce-subnet-dal-2.id]
   resource_group  = data.ibm_resource_group.group.id
 }
 
