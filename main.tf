@@ -98,28 +98,6 @@ resource "ibm_is_security_group_rule" "security_group_rule_out" {
   remote    = "0.0.0.0/0"
 }
 
-resource "ibm_is_public_gateway" "public_gateway_dal1" {
-  name = "nginx-gateway_1"
-  vpc  = ibm_is_vpc.vpc-dal.id
-  zone = "us-south-1"
-
-  //User can configure timeouts
-  timeouts {
-    create = "90m"
-  }
-}
-
-resource "ibm_is_public_gateway" "public_gateway_dal2" {
-  name = "nginx-gateway_2"
-  vpc  = ibm_is_vpc.vpc-dal.id
-  zone = "us-south-2"
-
-  //User can configure timeouts
-  timeouts {
-    create = "90m"
-  }
-}
-
 ##############################################################################
 # Desploy instances on DALL
 ##############################################################################

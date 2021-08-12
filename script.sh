@@ -9,3 +9,5 @@ rm /etc/nginx/sites-enabled/*
 mv default /etc/nginx/sites-enabled/default
 service nginx start
 nginx -s reload
+nginx -s reload
+sudo nginx -s reload
