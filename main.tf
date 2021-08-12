@@ -78,27 +78,3 @@ resource "ibm_is_instance" "cce-vsi-dal" {
   resource_group = data.ibm_resource_group.group.id
 }
 
-resource "ibm_is_lb" "lb-nginx" {
-  name            = "nginx-lb"
-  subnets         = ibm_is_subnet.*.id
-  resource_group  = data.ibm_resource_group.group.id
-}
-
-resource "ibm_is_lb_pool" "lb-nginx-pool" {
-  lb                 = ibm_is_lb.lb-nginx.id
-  name               = "nginx-lb-pool"
-  protocol           = "http"
-  algorithm          = "round_robin"
-  health_delay       = "15"
-  health_retries     = "2"
-  health_timeout     = "5"
-  health_type        = "http"
-  health_monitor_url = "/"
-}
-
-resource "ibm_is_lb_listener" "lb-listener" {
-  lb                   = ibm_is_lb.lb.id
-  port                 = "80"
-  protocol             = "http"
-  default_pool         = element(split("/", ibm_is_lb_pool.lb-nginx-pool.id), 1)
-}
