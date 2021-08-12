@@ -36,6 +36,28 @@ resource "ibm_is_vpc" "vpc-dal" {
 # Create Subnet zone DALL
 ##############################################################################
 
+resource "ibm_is_public_gateway" "public_gateway_dal1" {
+  name = "nginx-gateway_1"
+  vpc  = ibm_is_vpc.vpc-dal.id
+  zone = "us-south-1"
+
+  //User can configure timeouts
+  timeouts {
+    create = "90m"
+  }
+}
+
+resource "ibm_is_public_gateway" "public_gateway_dal2" {
+  name = "nginx-gateway_2"
+  vpc  = ibm_is_vpc.vpc-dal.id
+  zone = "us-south-2"
+
+  //User can configure timeouts
+  timeouts {
+    create = "90m"
+  }
+}
+
 # Increase count to create subnets in all zones
 resource "ibm_is_subnet" "cce-subnet-dal-1" {
   provider = ibm.south
@@ -43,6 +65,7 @@ resource "ibm_is_subnet" "cce-subnet-dal-1" {
   vpc             = ibm_is_vpc.vpc-dal.id
   zone            = "us-south-1"
   total_ipv4_address_count= "256"
+  public_gateway  = ibm_is_public_gateway.public_gateway_dal1.id
   resource_group  = data.ibm_resource_group.group.id
 }
 
@@ -53,6 +76,7 @@ resource "ibm_is_subnet" "cce-subnet-dal-2" {
   vpc             = ibm_is_vpc.vpc-dal.id
   zone            = "us-south-2"
   total_ipv4_address_count= "256"
+  public_gateway  = ibm_is_public_gateway.public_gateway_dal2.id
   resource_group  = data.ibm_resource_group.group.id
 }
 
@@ -72,6 +96,28 @@ resource "ibm_is_security_group_rule" "security_group_rule_out" {
   group     = ibm_is_security_group.security_group.id
   direction = "outbound"
   remote    = "0.0.0.0/0"
+}
+
+resource "ibm_is_public_gateway" "public_gateway_dal1" {
+  name = "nginx-gateway_1"
+  vpc  = ibm_is_vpc.vpc-dal.id
+  zone = "us-south-1"
+
+  //User can configure timeouts
+  timeouts {
+    create = "90m"
+  }
+}
+
+resource "ibm_is_public_gateway" "public_gateway_dal2" {
+  name = "nginx-gateway_2"
+  vpc  = ibm_is_vpc.vpc-dal.id
+  zone = "us-south-2"
+
+  //User can configure timeouts
+  timeouts {
+    create = "90m"
+  }
 }
 
 ##############################################################################
