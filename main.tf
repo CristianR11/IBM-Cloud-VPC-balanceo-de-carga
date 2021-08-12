@@ -113,7 +113,7 @@ resource "ibm_is_lb_pool" "lb-nginx-pool" {
 }
 
 resource "ibm_is_lb_listener" "lb-listener" {
-  lb                   = ibm_is_lb.lb.id
+  lb                   = ibm_is_lb.lb-nginx.id
   port                 = "80"
   protocol             = "http"
   default_pool         = element(split("/", ibm_is_lb_pool.lb-nginx-pool.id), 1)
