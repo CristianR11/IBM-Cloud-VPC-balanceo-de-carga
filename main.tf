@@ -112,6 +112,22 @@ resource "ibm_is_lb_pool" "lb-nginx-pool" {
   health_monitor_url = "/"
 }
 
+resource "ibm_is_lb_pool_member" "lb-server-1" {
+  lb             = ibm_is_lb.lb-nginx.id
+  pool           = ibm_is_lb_pool.lb-nginx-pool.id
+  port           = 80
+  target_id      = ibm_is_instance.cce-vsi-dal-1.id
+  weight         = 60
+}
+
+resource "ibm_is_lb_pool_member" "lb-server-2" {
+  lb             = ibm_is_lb.lb-nginx.id
+  pool           = ibm_is_lb_pool.lb-nginx-pool.id
+  port           = 80
+  target_id      = ibm_is_instance.cce-vsi-dal-2.id
+  weight         = 60
+}
+
 resource "ibm_is_lb_listener" "lb-listener" {
   lb                   = ibm_is_lb.lb-nginx.id
   port                 = "80"
