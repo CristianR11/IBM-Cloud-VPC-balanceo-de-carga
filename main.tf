@@ -64,7 +64,7 @@ resource "ibm_is_instance" "cce-vsi-dal" {
   provider = ibm.south
   count    = 2
   name    = "cce-nginx-${count.index + 1}"
-  image   = "r006-de4fc543-2ce1-47de-b0b8-b98556a741da"
+  image   = "r006-988caa8b-7786-49c9-aea6-9553af2b1969"
   profile = "cx2-2x4"
 
   primary_network_interface {
