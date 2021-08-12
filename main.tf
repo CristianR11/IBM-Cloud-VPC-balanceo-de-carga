@@ -116,7 +116,7 @@ resource "ibm_is_lb_pool_member" "lb-server-1" {
   lb             = ibm_is_lb.lb-nginx.id
   pool           = ibm_is_lb_pool.lb-nginx-pool.id
   port           = 80
-  target_id      = ibm_is_instance.cce-vsi-dal-1.id
+  target_address     = ibm_is_instance.cce-vsi-dal-1.primary_network_interface.primary_ipv4_address
   weight         = 60
 }
 
@@ -124,7 +124,7 @@ resource "ibm_is_lb_pool_member" "lb-server-2" {
   lb             = ibm_is_lb.lb-nginx.id
   pool           = ibm_is_lb_pool.lb-nginx-pool.id
   port           = 80
-  target_id      = ibm_is_instance.cce-vsi-dal-2.id
+  target_address = ibm_is_instance.cce-vsi-dal-2.primary_network_interface.primary_ipv4_address 
   weight         = 60
 }
 
