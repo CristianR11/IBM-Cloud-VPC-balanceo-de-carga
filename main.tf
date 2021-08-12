@@ -60,21 +60,61 @@ resource "ibm_is_subnet" "cce-subnet-dal-2" {
 # Desploy instances on DALL
 ##############################################################################
 
-resource "ibm_is_instance" "cce-vsi-dal" {
+resource "ibm_is_instance" "cce-vsi-dal-1" {
   provider = ibm.south
-  count    = 2
-  name    = "cce-nginx-${count.index + 1}"
+  name    = "cce-nginx-1"
   image   = "r006-988caa8b-7786-49c9-aea6-9553af2b1969"
   profile = "cx2-2x4"
 
   primary_network_interface {
-    subnet = ibm_is_subnet.cce-subnet-dal-${count.index + 1}.id
+    subnet = ibm_is_subnet.cce-subnet-dal-1.id
   }
 
   vpc       = ibm_is_vpc.vpc-dal.id
-  zone      = "us-south-${count.index + 1}"
+  zone      = "us-south-1"
   keys      = [ibm_is_ssh_key.cce-ssh-dal.id]
   user_data = file("./script.sh")
   resource_group = data.ibm_resource_group.group.id
 }
 
+resource "ibm_is_instance" "cce-vsi-dal-2" {
+  provider = ibm.south
+  name    = "cce-nginx-2"
+  image   = "r006-988caa8b-7786-49c9-aea6-9553af2b1969"
+  profile = "cx2-2x4"
+
+  primary_network_interface {
+    subnet = ibm_is_subnet.cce-subnet-dal-2.id
+  }
+
+  vpc       = ibm_is_vpc.vpc-dal.id
+  zone      = "us-south-2"
+  keys      = [ibm_is_ssh_key.cce-ssh-dal.id]
+  user_data = file("./script.sh")
+  resource_group = data.ibm_resource_group.group.id
+}
+
+resource "ibm_is_lb" "lb-nginx" {
+  name            = "nginx-lb"
+  subnets         = ibm_is_subnet.*.id
+  resource_group  = data.ibm_resource_group.group.id
+}
+
+resource "ibm_is_lb_pool" "lb-nginx-pool" {
+  lb                 = ibm_is_lb.lb-nginx.id
+  name               = "nginx-lb-pool"
+  protocol           = "http"
+  algorithm          = "round_robin"
+  health_delay       = "15"
+  health_retries     = "2"
+  health_timeout     = "5"
+  health_type        = "http"
+  health_monitor_url = "/"
+}
+
+resource "ibm_is_lb_listener" "lb-listener" {
+  lb                   = ibm_is_lb.lb.id
+  port                 = "80"
+  protocol             = "http"
+  default_pool         = element(split("/", ibm_is_lb_pool.lb-nginx-pool.id), 1)
+}
