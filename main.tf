@@ -37,7 +37,7 @@ resource "ibm_is_vpc" "vpc-dal" {
 ##############################################################################
 
 resource "ibm_is_public_gateway" "public_gateway_dal1" {
-  name = "nginx-gateway_1"
+  name = "nginx-gateway-1"
   vpc  = ibm_is_vpc.vpc-dal.id
   zone = "us-south-1"
 
@@ -48,7 +48,7 @@ resource "ibm_is_public_gateway" "public_gateway_dal1" {
 }
 
 resource "ibm_is_public_gateway" "public_gateway_dal2" {
-  name = "nginx-gateway_2"
+  name = "nginx-gateway-2"
   vpc  = ibm_is_vpc.vpc-dal.id
   zone = "us-south-2"
 
